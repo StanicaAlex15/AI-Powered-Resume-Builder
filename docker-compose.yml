@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - scraper-service
+      - ai-service
+      - export-service
+      - cv-review-service
+    networks:
+      - app-network
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "3001:3001"
+    networks:
+      - app-network
+
+  scraper-service:
+    build: ./data-scraper-service
+    ports:
+      - "3002:3002"
+    networks:
+      - app-network
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "3003:3003"
+    networks:
+      - app-network
+
+  export-service:
+    build: ./export-service
+    ports:
+      - "3004:3004"
+    networks:
+      - app-network
+
+  cv-review-service:
+    build: ./cv-review-service
+    ports:
+      - "3005:3005"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
