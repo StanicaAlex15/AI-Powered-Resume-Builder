@@ -48,7 +48,7 @@ jobs:
         run: |
           docker-compose build api-gateway
 
-  # Stage 3: Run tests
+  # Stage 3: Run tests (commented for now)
   # test-services:
   #   runs-on: ubuntu-latest
   #   needs: build-api-gateway
@@ -59,7 +59,7 @@ jobs:
   #     - name: Run tests for services (example placeholder)
   #       run: |
   #         echo "Running tests..."
-  #
+  #         # Add commands to run tests here, e.g., npm test or other tools.
 
   deploy-services:
     runs-on: ubuntu-latest
