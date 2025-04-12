@@ -13,3 +13,6 @@ Export Service: http://localhost:3004
 CV Review Service: http://localhost:3005
 
 RabbitMQ Management UI: http://localhost:15672 (Default credentials: guest/guest)
+
+Deploy the Application on Docker Desktop
+run: "docker compose up --build -d"
