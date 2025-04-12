@@ -3,51 +3,111 @@ version: "3.8"
 services:
   api-gateway:
     build: ./api-gateway
+    container_name: api-gateway
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - user-service
-      - scraper-service
       - ai-service
       - export-service
       - cv-review-service
     networks:
       - app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "500M"
+        reservations:
+          cpus: "0.5"
+          memory: "200M"
 
   user-service:
-    build: ./user-service
+    build: ./microservices/user-service
+    container_name: user-service
     ports:
       - "3001:3001"
     networks:
       - app-network
-
-  scraper-service:
-    build: ./data-scraper-service
-    ports:
-      - "3002:3002"
-    networks:
-      - app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
 
   ai-service:
-    build: ./ai-service
+    build: ./microservices/ai-service
+    container_name: ai-service
     ports:
       - "3003:3003"
     networks:
       - app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
 
   export-service:
-    build: ./export-service
+    build: ./microservices/export-service
+    container_name: export-service
     ports:
       - "3004:3004"
     networks:
       - app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
 
   cv-review-service:
-    build: ./cv-review-service
+    build: ./microservices/cv-review-service
+    container_name: cv-review-service
     ports:
       - "3005:3005"
     networks:
       - app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.2"
+          memory: "256M"
 
 networks:
   app-network:

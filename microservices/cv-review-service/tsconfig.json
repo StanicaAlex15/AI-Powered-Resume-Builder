@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES6",            // Versiunea de JavaScript în care vor fi compilate fișierele
+    "module": "commonjs",       // Modulul pentru Node.js
+    "outDir": "./build",        // Folderul în care vor fi salvate fișierele compilate
+    "rootDir": "./src",         // Directorul în care se află fișierele sursă TypeScript
+    "esModuleInterop": true,
+    "strict": true              // Activarea verificării stricte
+  },
+  "include": [
+    "src/**/*.ts"               // Include toate fișierele .ts din folderul src
+  ],
+  "exclude": [
+    "node_modules"              // Exclude folderul node_modules din compilare
+  ]
+}
