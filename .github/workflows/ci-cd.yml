@@ -15,29 +15,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker
-        uses: docker/setup-docker@v2
-
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v2
         with:
           version: latest
 
       - name: Build User Service
-        run: |
-          docker compose build user-service
+        run: docker compose build user-service
 
       - name: Build AI Service
-        run: |
-          docker compose build ai-service
+        run: docker compose build ai-service
 
       - name: Build Export Service
-        run: |
-          docker compose build export-service
+        run: docker compose build export-service
 
       - name: Build CV Review Service
-        run: |
-          docker compose build cv-review-service
+        run: docker compose build cv-review-service
 
   build-api-gateway:
     runs-on: ubuntu-latest
@@ -52,8 +45,7 @@ jobs:
           version: latest
 
       - name: Build API Gateway
-        run: |
-          docker compose build api-gateway
+        run: docker compose build api-gateway
 
   # Stage 3 (Optional): Run tests (commented for now)
   # test-services:
@@ -81,8 +73,7 @@ jobs:
           version: latest
 
       - name: Deploy services with Docker Compose
-        run: |
-          docker compose up --build -d
+        run: docker compose up --build -d
 
       - name: Check running containers
         run: docker ps
