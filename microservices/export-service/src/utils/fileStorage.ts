@@ -51,7 +51,7 @@ export const savePDFToMongo = async (
       .pipe(uploadStream)
       .on("error", (error) => {
         reject(
-          new Error(`Error saving PDF to MongoDB: ${error.message || error}`)
+          new Error(`Error saving PDF to MongoDB: ${error.message ?? error}`)
         );
       })
       .on("finish", () => {
