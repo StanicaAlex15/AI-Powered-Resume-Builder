@@ -4,6 +4,7 @@ import { initializeGridFS, getPDFStreamFromMongo } from "./utils/fileStorage";
 import { startExportProcessing } from "./controllers/exportController";
 
 const app = express();
+app.disable("x-powered-by");
 const startApp = async () => {
   try {
     await connectDB();

@@ -3,6 +3,7 @@ import fileUpload from "express-fileupload";
 import { processCV } from "./controllers/aiController";
 
 const app = express();
+app.disable("x-powered-by");
 const port = 3003;
 
 app.use(
