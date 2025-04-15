@@ -1,25 +1,29 @@
-import mongoose from "mongoose";
 import { GridFSBucket, MongoClient } from "mongodb";
 import { Readable } from "stream";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { ObjectId } from "mongodb";
 
 const mongoURI =
-  process.env.MONGO_URI || "mongodb://localhost:27017/export-service";
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/export-service";
 const dbName = "export-service";
 
 let gfsBucket: GridFSBucket | null = null;
+let client: MongoClient | null = null;
 
-export const connectToMongo = async (): Promise<void> => {
+export const initializeGridFS = async (): Promise<void> => {
+  if (gfsBucket) {
+    return;
+  }
+
   try {
-    const client = new MongoClient(mongoURI);
-    await client.connect();
+    if (!client) {
+      client = new MongoClient(mongoURI);
+      await client.connect();
+    }
     const db = client.db(dbName);
     gfsBucket = new GridFSBucket(db, { bucketName: "pdfs" });
-    console.log("✅ Connected to MongoDB and GridFS initialized.");
+    console.log("✅ GridFS initialized successfully!");
   } catch (error) {
-    console.error("❌ Error connecting to MongoDB:", error);
+    console.error("❌ Error initializing GridFS:", error);
     throw error;
   }
 };
@@ -30,7 +34,7 @@ export const savePDFToMongo = async (
 ): Promise<string> => {
   if (!gfsBucket) {
     throw new Error(
-      "GridFS bucket not initialized. Call connectToMongo() first."
+      "GridFS bucket not initialized. Call initializeGridFS() first."
     );
   }
 
@@ -39,7 +43,11 @@ export const savePDFToMongo = async (
     readableStream.push(buffer);
     readableStream.push(null);
 
-    const uploadStream = gfsBucket!.openUploadStream(filename);
+    if (!gfsBucket) {
+      throw new Error("GridFS bucket not initialized");
+    }
+
+    const uploadStream = gfsBucket.openUploadStream(filename);
     readableStream
       .pipe(uploadStream)
       .on("error", (error) => {
@@ -51,4 +59,21 @@ export const savePDFToMongo = async (
         resolve(uploadStream.id.toString());
       });
   });
+};
+
+export const getPDFStreamFromMongo = async (fileId: string) => {
+  if (!gfsBucket) {
+    throw new Error("GridFS bucket not initialized.");
+  }
+
+  try {
+    console.time("Download PDF Time");
+    const _id = new ObjectId(fileId);
+    const stream = gfsBucket.openDownloadStream(_id);
+    console.timeEnd("Download PDF Time");
+    return stream;
+  } catch (err) {
+    console.error("❌ Error creating download stream:", err);
+    throw err;
+  }
 };

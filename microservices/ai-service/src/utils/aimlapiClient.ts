@@ -1,32 +1,45 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import https from "https";
+import axiosRetry from "axios-retry";
+
 dotenv.config();
 
 const API_KEY = process.env.AIML_API_KEY!;
-const API_URL = process.env.AIML_API_URL || "https://api.aimlapi.com/v1/gpt4o";
+const API_URL =
+  process.env.AIML_API_URL || "https://api.aimlapi.com/v1/chat/completions";
+
+const apiClient = axios.create({
+  httpsAgent: new https.Agent({ keepAlive: true }),
+  timeout: 300000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+
+axiosRetry(apiClient, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 export const callAIMLAPI = async (prompt: string): Promise<string> => {
   try {
-    const response = await axios.post(
-      API_URL,
-      {
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: "You are a helpful career assistant AI." },
-          { role: "user", content: prompt },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await apiClient.post(API_URL, {
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: "You are a helpful career assistant AI." },
+        { role: "user", content: prompt },
+      ],
+    });
 
-    return response.data.choices[0].message.content;
+    const rawResponse = response.data.choices[0].message.content;
+
+    const cleaned = rawResponse.replace(/```markdown|```/g, "").trim();
+    return cleaned;
   } catch (error: any) {
-    console.error("AIML API call failed:", error.response?.data || error);
+    console.error(
+      "AIML API call failed:",
+      error.response?.data || error.message
+    );
     throw new Error("AIML API call failed");
   }
 };

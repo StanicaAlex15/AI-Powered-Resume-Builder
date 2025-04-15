@@ -1,42 +1,37 @@
 import amqp from "amqplib";
 import crypto from "crypto-js";
 
-const rabbitUrl = "amqp://rabbitmq";
+const rabbitUrl = process.env.RABBITMQ_URL || "amqp://rabbitmq";
 const exchangeName = "ai_exchange";
 const queueName = "export_queue";
 const secretKey = "secret_key_for_encryption";
 
 export const sendProcessedDataToExport = async (processedData: string) => {
+  let connection;
   try {
-    console.log("Connecting to RabbitMQ...");
-    const connection = await amqp.connect(rabbitUrl);
-    console.log("Connection established.");
-
+    connection = await amqp.connect(rabbitUrl);
     const channel = await connection.createChannel();
-    console.log("Channel created.");
 
     await channel.assertExchange(exchangeName, "direct", { durable: true });
-    console.log(`Exchange '${exchangeName}' asserted.`);
+    await channel.assertQueue(queueName, { durable: true });
+    await channel.bindQueue(queueName, exchangeName, queueName);
 
-    const encryptedProcessedData = crypto.AES.encrypt(
+    const encryptedData = crypto.AES.encrypt(
       processedData,
       secretKey
     ).toString();
-    console.log("Processed data encrypted:", encryptedProcessedData);
 
-    channel.publish(
-      exchangeName,
-      queueName,
-      Buffer.from(encryptedProcessedData)
-    );
-    console.log(`Processed data published to queue '${queueName}'`);
+    channel.publish(exchangeName, queueName, Buffer.from(encryptedData), {
+      persistent: true,
+    });
 
-    setTimeout(() => {
-      channel.close();
-      connection.close();
-      console.log("Connection closed.");
-    }, 500);
+    console.log("Processed CV sent to RabbitMQ");
+
+    await channel.close();
   } catch (error) {
-    console.error("Error sending processed data:", error);
+    console.error("Error in RabbitMQ publisher:", error);
+    throw error;
+  } finally {
+    if (connection) await connection.close();
   }
 };

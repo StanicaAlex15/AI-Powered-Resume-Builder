@@ -1,6 +1,22 @@
-import { startAIProcessing } from "./controllers/aiController";
+import express from "express";
+import fileUpload from "express-fileupload";
+import { processCV } from "./controllers/aiController";
 
-startAIProcessing();
-
+const app = express();
 const port = 3003;
-console.log(`AI Service listening on port ${port}`);
+
+app.use(
+  fileUpload({
+    limits: { fileSize: 10 * 1024 * 1024 },
+    abortOnLimit: true,
+    useTempFiles: false,
+  })
+);
+
+app.post("/process-cv", (req, res) => {
+  processCV(req, res);
+});
+
+app.listen(port, () => {
+  console.log(`AI Service listening on port ${port}`);
+});
