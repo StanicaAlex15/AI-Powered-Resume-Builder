@@ -9,7 +9,12 @@ router.post("/", async (req: express.Request, res: express.Response) => {
     const scrapedData = await reviewCV(userId);
     res.status(200).json(scrapedData);
   } catch (error) {
-    res.status(500).json({ error: "Error scraping data" });
+    console.error("Error scraping data:", error);
+
+    res.status(500).json({
+      error: "Error scraping data. Please try again later.",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 
