@@ -7,7 +7,7 @@ dotenv.config();
 
 const API_KEY = process.env.AIML_API_KEY!;
 const API_URL =
-  process.env.AIML_API_URL || "https://api.aimlapi.com/v1/chat/completions";
+  process.env.AIML_API_URL ?? "https://api.aimlapi.com/v1/chat/completions";
 
 const apiClient = axios.create({
   httpsAgent: new https.Agent({ keepAlive: true }),
@@ -38,7 +38,7 @@ export const callAIMLAPI = async (prompt: string): Promise<string> => {
   } catch (error: any) {
     console.error(
       "AIML API call failed:",
-      error.response?.data || error.message
+      error.response?.data ?? error.message
     );
     throw new Error("AIML API call failed");
   }

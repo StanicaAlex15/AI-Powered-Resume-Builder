@@ -16,7 +16,7 @@ const startApp = async () => {
 
 startApp();
 
-const port = process.env.PORT || 3004;
+const port = process.env.PORT ?? 3004;
 app.listen(port, () => {
   console.log(`🚀 Export Service running on port ${port}`);
 });

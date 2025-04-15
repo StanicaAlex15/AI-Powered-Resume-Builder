@@ -1,9 +1,8 @@
-import { GridFSBucket, MongoClient } from "mongodb";
+import { GridFSBucket, MongoClient, ObjectId } from "mongodb";
 import { Readable } from "stream";
-import { ObjectId } from "mongodb";
 
 const mongoURI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/export-service";
+  process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017/export-service";
 const dbName = "export-service";
 
 let gfsBucket: GridFSBucket | null = null;

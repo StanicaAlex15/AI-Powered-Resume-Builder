@@ -6,7 +6,7 @@ import { UploadedFile } from "express-fileupload";
 
 export const processCV = async (req: Request, res: Response) => {
   try {
-    if (!req.files || !req.files.cv) {
+    if (!req.files?.cv) {
       return res.status(400).send("No file uploaded");
     }
 

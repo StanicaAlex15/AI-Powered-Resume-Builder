@@ -1,7 +1,7 @@
 import amqp from "amqplib";
 import crypto from "crypto-js";
 
-const rabbitUrl = process.env.RABBITMQ_URL || "amqp://rabbitmq";
+const rabbitUrl = process.env.RABBITMQ_URL ?? "amqp://rabbitmq";
 const exchangeName = "ai_exchange";
 const queueName = "export_queue";
 const secretKey = "secret_key_for_encryption";
