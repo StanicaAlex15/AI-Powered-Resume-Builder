@@ -17,7 +17,9 @@ jobs:
 
       - name: Install dependencies for User Service
         working-directory: ./microservices/user-service
-        run: npm ci
+        run: |
+          npm ci
+          npm install --save-dev jest
 
       - name: Run tests for User Service
         working-directory: ./microservices/user-service
@@ -28,7 +30,9 @@ jobs:
 
       - name: Install dependencies for AI Service
         working-directory: ./microservices/ai-service
-        run: npm ci
+        run: |
+          npm ci
+          npm install --save-dev jest
 
       - name: Run tests for AI Service
         working-directory: ./microservices/ai-service
@@ -39,7 +43,9 @@ jobs:
 
       - name: Install dependencies for Export Service
         working-directory: ./microservices/export-service
-        run: npm ci
+        run: |
+          npm ci
+          npm install --save-dev jest
 
       - name: Run tests for Export Service
         working-directory: ./microservices/export-service
@@ -50,7 +56,9 @@ jobs:
 
       - name: Install dependencies for CV Review Service
         working-directory: ./microservices/cv-review-service
-        run: npm ci
+        run: |
+          npm ci
+          npm install --save-dev jest
 
       - name: Run tests for CV Review Service
         working-directory: ./microservices/cv-review-service
