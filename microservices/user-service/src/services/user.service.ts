@@ -1,10 +1,10 @@
-import User, { IUser } from "../models/user.model";
+import User, { IUser, IUserBase } from "../models/user.model";
 
 async function getUsers(): Promise<IUser[]> {
-  return await User.find();
+  return await User.find().exec();
 }
 
-async function createUser(data: IUser): Promise<IUser> {
+async function createUser(data: IUserBase): Promise<IUser> {
   const user = new User(data);
   return await user.save();
 }

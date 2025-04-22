@@ -11,36 +11,37 @@ on:
 jobs:
   build-microservices:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [user-service, ai-service, export-service, cv-review-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build User Service
-        run: docker compose build user-service
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
 
-      - name: Build AI Service
-        run: docker compose build ai-service
+      - name: Install dependencies for ${{ matrix.service }}
+        run: |
+          cd microservices/${{ matrix.service }}
+          npm ci
 
-      - name: Build Export Service
-        run: docker compose build export-service
+      - name: Run tests and generate coverage for ${{ matrix.service }}
+        run: |
+          cd microservices/${{ matrix.service }}
+          npm test -- --coverage  # Asigură-te că rulezi testele pentru fiecare microserviciu
 
-      - name: Build CV Review Service
-        run: docker compose build cv-review-service
-
-  build-api-gateway:
-    runs-on: ubuntu-latest
-    needs: build-microservices
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Build API Gateway
-        run: docker compose build api-gateway
+      - name: Build ${{ matrix.service }} Docker image
+        run: |
+          cd microservices/${{ matrix.service }}
+          docker compose build
 
   sonarcloud-analysis:
     name: SonarCloud Scan
     runs-on: ubuntu-latest
-    needs: build-api-gateway
+    needs: build-microservices
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

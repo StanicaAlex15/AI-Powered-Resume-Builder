@@ -1,16 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES6",            // Versiunea de JavaScript în care vor fi compilate fișierele
-    "module": "commonjs",       // Modulul pentru Node.js
-    "outDir": "./build",        // Folderul în care vor fi salvate fișierele compilate
-    "rootDir": "./src",         // Directorul în care se află fișierele sursă TypeScript
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./build",
+    "rootDir": "./src",
     "esModuleInterop": true,
-    "strict": true              // Activarea verificării stricte
+    "strict": true,
+    "types": ["jest", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": [
-    "src/**/*.ts"               // Include toate fișierele .ts din folderul src
+    "src/**/*.ts",
+    "src/__tests__/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"              // Exclude folderul node_modules din compilare
-  ]
+  "exclude": ["node_modules"]
 }
