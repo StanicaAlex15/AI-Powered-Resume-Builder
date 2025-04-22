@@ -11,63 +11,86 @@ on:
 jobs:
   build-microservices:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [user-service, ai-service, export-service, cv-review-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
+      - name: Install dependencies for User Service
+        working-directory: ./microservices/user-service
+        run: npm ci
 
-      - name: Install dependencies for ${{ matrix.service }}
-        run: |
-          cd microservices/${{ matrix.service }}
-          npm ci
-        continue-on-error: true
+      - name: Run tests for User Service
+        working-directory: ./microservices/user-service
+        run: npm test
 
-      - name: Install Jest and related dependencies for ${{ matrix.service }}
-        run: |
-          cd microservices/${{ matrix.service }}
-          npm install --save-dev jest @types/jest ts-jest
-        continue-on-error: true
+      - name: Build User Service
+        run: docker compose build user-service
 
-      - name: Run tests and generate coverage for ${{ matrix.service }}
-        run: |
-          cd microservices/${{ matrix.service }}
-          npm test --coverage
-        continue-on-error: true
+      - name: Install dependencies for AI Service
+        working-directory: ./microservices/ai-service
+        run: npm ci
 
-      - name: Install Docker and Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo apt-get install -y docker-compose
-        continue-on-error: true
+      - name: Run tests for AI Service
+        working-directory: ./microservices/ai-service
+        run: npm test
 
-      - name: Build Docker image for ${{ matrix.service }}
-        run: |
-          cd microservices/${{ matrix.service }}
-          docker-compose -f docker-compose.yml build
-        continue-on-error: true
+      - name: Build AI Service
+        run: docker compose build ai-service
 
-  sonarcloud-analysis:
-    name: SonarCloud Scan
+      - name: Install dependencies for Export Service
+        working-directory: ./microservices/export-service
+        run: npm ci
+
+      - name: Run tests for Export Service
+        working-directory: ./microservices/export-service
+        run: npm test
+
+      - name: Build Export Service
+        run: docker compose build export-service
+
+      - name: Install dependencies for CV Review Service
+        working-directory: ./microservices/cv-review-service
+        run: npm ci
+
+      - name: Run tests for CV Review Service
+        working-directory: ./microservices/cv-review-service
+        run: npm test
+
+      - name: Build CV Review Service
+        run: docker compose build cv-review-service
+
+  build-api-gateway:
     runs-on: ubuntu-latest
     needs: build-microservices
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Install dependencies for API Gateway
+        working-directory: ./api-gateway
+        run: npm ci
+
+      - name: Run tests for API Gateway
+        working-directory: ./api-gateway
+        run: npm test
+
+      - name: Build API Gateway
+        run: docker compose build api-gateway
+
+  sonarcloud-analysis:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+    needs: build-api-gateway
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: "18"
 
-      - name: Install dependencies for SonarCloud
+      - name: Install dependencies
         run: npm ci
 
       - name: Run SonarCloud Scan
@@ -84,15 +107,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo apt-get install -y docker-compose
-
       - name: Deploy services with Docker Compose
-        run: |
-          docker-compose -f docker-compose.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Check running containers
         run: docker ps
