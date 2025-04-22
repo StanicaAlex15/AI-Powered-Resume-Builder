@@ -1,7 +1,6 @@
 import User from "../models/user.model";
 import { getUsers, createUser, deleteUser } from "../services/user.service";
 import { IUser } from "../models/user.model";
-import { Model } from "mongoose";
 
 jest.mock("../models/user.model");
 

@@ -4,7 +4,7 @@
     "main": "build/app.js",
     "scripts": {
         "start": "tsc && nodemon  build/app.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest --coverage"
     },
     "dependencies": {
         "amqplib": "^0.10.5",
@@ -22,6 +22,38 @@
         "@types/express": "^5.0.1",
         "@types/node": "^22.13.11",
         "@types/pdfkit": "^0.13.9",
+        "ts-jest": "^29.3.2",
         "typescript": "^5.8.2"
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>"
+        ],
+        "testRegex": "(test|spec)\\.ts$",
+        "transform": {
+            "^.+\\.(ts|tsx)$": "ts-jest"
+        },
+        "moduleFileExtensions": [
+            "ts",
+            "js"
+        ],
+        "moduleDirectories": [
+            "node_modules"
+        ],
+        "testEnvironmentOptions": {
+            "legacyFakeTimers": true
+        },
+        "coverageReporters": [
+            "json-summary",
+            "text",
+            "lcov"
+        ],
+        "coverageDirectory": "./coverage/",
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "/__tests__/"
+        ]
     }
 }
