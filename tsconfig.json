@@ -9,8 +9,8 @@
     "types": ["jest"]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.d.ts"
+    "**/src/**/*.ts",
+    "**/src/**/*.tsx",
+    "**/src/**/*.d.ts"
   ]
 }
