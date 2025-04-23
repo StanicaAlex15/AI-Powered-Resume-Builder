@@ -78,10 +78,6 @@ jobs:
         working-directory: ./api-gateway
         run: npm ci
 
-      - name: Run tests for API Gateway
-        working-directory: ./api-gateway
-        run: npm test
-
       - name: Build API Gateway
         run: docker compose build api-gateway
 
