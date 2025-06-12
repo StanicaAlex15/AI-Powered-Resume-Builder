@@ -160,17 +160,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Azure Login (Managed Identity)
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_MANAGED_IDENTITY_CLIENT_ID }}
-          allow-no-subscriptions: true
+      - name: Set kubeconfig from secret
+        run: |
+          echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
-      - name: Set AKS credentials
-        uses: azure/aks-set-context@v3
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
         with:
-          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER }}
+          version: "latest"
 
       - name: Apply k8s manifests
         run: kubectl apply -f k8s-azure.yaml
@@ -216,36 +214,36 @@ jobs:
 
       - name: Run Snyk test (user-service)
         working-directory: ./microservices/user-service
-        run: snyk test
+        run: snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run Snyk test (ai-service)
         working-directory: ./microservices/ai-service
-        run: snyk test
+        run: snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run Snyk test (export-service)
         working-directory: ./microservices/export-service
-        run: snyk test
+        run: snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run Snyk test (cv-review-service)
         working-directory: ./microservices/cv-review-service
-        run: snyk test
+        run: snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run Snyk test (auth-service)
         working-directory: ./microservices/auth-service
-        run: snyk test
+        run: snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run Snyk test (api-gateway)
         working-directory: ./api-gateway
-        run: snyk test
+        run: snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

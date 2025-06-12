@@ -51,6 +51,7 @@ docker-compose.override.yml
 docker-compose.debug.yml
 docker-compose.prod.yml
 .dockerignore
+kubeconfig.b64
 
 # Logs
 logs/
