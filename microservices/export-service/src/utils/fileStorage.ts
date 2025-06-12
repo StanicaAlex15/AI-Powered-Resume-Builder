@@ -29,7 +29,9 @@ export const initializeGridFS = async (): Promise<void> => {
 
 export const savePDFToMongo = async (
   filename: string,
-  buffer: Buffer
+  buffer: Buffer,
+  userId: String,
+  uuid: String
 ): Promise<string> => {
   if (!gfsBucket) {
     throw new Error(
@@ -46,7 +48,10 @@ export const savePDFToMongo = async (
       throw new Error("GridFS bucket not initialized");
     }
 
-    const uploadStream = gfsBucket.openUploadStream(filename);
+    const uploadStream = gfsBucket.openUploadStream(filename, {
+      metadata: { userId, uuid },
+    });
+
     readableStream
       .pipe(uploadStream)
       .on("error", (error) => {
@@ -61,19 +66,39 @@ export const savePDFToMongo = async (
   });
 };
 
-export const getPDFStreamFromMongo = async (fileId: string) => {
+export const getPDFStreamFromMongoByUuid = async (uuid: string) => {
   if (!gfsBucket) {
     throw new Error("GridFS bucket not initialized.");
   }
 
   try {
     console.time("Download PDF Time");
-    const _id = new ObjectId(fileId);
-    const stream = gfsBucket.openDownloadStream(_id);
+
+    const filesCursor = await gfsBucket
+      .find({ "metadata.uuid": uuid })
+      .sort({ uploadDate: -1 })
+      .limit(1);
+    const file = await filesCursor.next();
+
+    if (!file) {
+      throw new Error(`No PDF found with UUID: ${uuid}`);
+    }
+
+    const stream = gfsBucket.openDownloadStream(file._id);
     console.timeEnd("Download PDF Time");
     return stream;
   } catch (err) {
-    console.error("❌ Error creating download stream:", err);
+    console.error("❌ Error creating download stream by UUID:", err);
     throw err;
   }
+};
+
+export const getAllPDFFilesByUserId = async (userId: string) => {
+  if (!gfsBucket) {
+    throw new Error("GridFS bucket not initialized.");
+  }
+
+  const filesCursor = await gfsBucket.find({ "metadata.userId": userId });
+  const files = await filesCursor.toArray();
+  return files;
 };

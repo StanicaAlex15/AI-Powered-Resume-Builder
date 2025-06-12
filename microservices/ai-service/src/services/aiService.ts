@@ -1,4 +1,4 @@
-import { callAIMLAPI } from "../utils/aimlapiClient";
+import { callChatGPT } from "../utils/chatGPTClient";
 
 export const analyzeCV = async (cvText: string): Promise<string> => {
   try {
@@ -22,7 +22,7 @@ export const analyzeCV = async (cvText: string): Promise<string> => {
     ${cvText}
     `;
 
-    const response = await callAIMLAPI(prompt);
+    const response = await callChatGPT(prompt);
     return response;
   } catch (error) {
     console.error("Error analyzing CV:", error);

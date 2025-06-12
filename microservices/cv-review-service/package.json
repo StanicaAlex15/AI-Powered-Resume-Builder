@@ -3,15 +3,17 @@
     "version": "1.0.0",
     "main": "build/app.js",
     "scripts": {
-        "start": "tsc && nodemon  build/app.js",
+        "start": "tsc && nodemon --exec \"node --max-old-space-size=2048\" build/app.js",
         "test": "jest --coverage"
     },
     "dependencies": {
         "axios": "^1.8.2",
         "express": "^4.17.1",
-        "nodemon": "^3.1.9"
+        "nodemon": "^3.1.9",
+        "cors": "^2.8.5"
     },
     "devDependencies": {
+        "@types/cors": "^2.8.18",
         "@types/express": "^5.0.0",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.13.10",

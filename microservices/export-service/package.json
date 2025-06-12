@@ -3,26 +3,31 @@
     "version": "1.0.0",
     "main": "build/app.js",
     "scripts": {
-        "start": "tsc && nodemon  build/app.js",
+        "start": "tsc && nodemon --exec \"node --max-old-space-size=2048\" build/app.js",
+        "build": "tsc",
         "test": "jest --coverage"
     },
     "dependencies": {
         "amqplib": "^0.10.5",
+        "cors": "^2.8.5",
         "crypto-js": "^4.2.0",
         "dotenv": "^16.4.7",
         "express": "^4.17.1",
         "mongoose": "^8.13.2",
         "nodemon": "^3.1.9",
         "pdfkit": "^0.16.0",
-        "puppeteer": "^19.0.0"
+        "puppeteer": "^19.0.0",
+        "uuid": "^11.1.0"
     },
     "devDependencies": {
         "@types/amqplib": "^0.10.7",
+        "@types/cors": "^2.8.18",
         "@types/crypto-js": "^4.2.2",
         "@types/express": "^5.0.1",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.13.11",
         "@types/pdfkit": "^0.13.9",
+        "@types/uuid": "^10.0.0",
         "ts-jest": "^29.3.2",
         "typescript": "^5.8.2"
     },

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./build",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "strict": true,
+    "types": ["jest", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/__tests__/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

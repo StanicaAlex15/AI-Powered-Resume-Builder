@@ -19,17 +19,38 @@ export const consumeProcessedData = async () => {
 
     channel.consume(queueName, async (msg) => {
       if (msg !== null) {
-        const encryptedData = msg.content.toString();
-        const decryptedData = crypto.AES.decrypt(
-          encryptedData,
-          secretKey
-        ).toString(crypto.enc.Utf8);
+        try {
+          const encryptedData = msg.content.toString();
 
-        const pdfBuffer = await createPDF(decryptedData);
-        const fileId = await savePDFToMongo("cv_export.pdf", pdfBuffer);
+          const decryptedString = crypto.AES.decrypt(
+            encryptedData,
+            secretKey
+          ).toString(crypto.enc.Utf8);
 
-        console.log(`📦 PDF saved in MongoDB with ID: ${fileId}`);
-        channel.ack(msg);
+          const payload = JSON.parse(decryptedString);
+
+          const { uuid, userId, data } = payload;
+
+          if (!uuid || !data || !userId) {
+            throw new Error("Payload incomplet sau invalid.");
+          }
+
+          console.log(`📥 Received UUID: ${payload.uuid}`);
+          console.log(`📥 Received USERID: ${payload.userId}`);
+          const pdfBuffer = await createPDF(payload.data);
+
+          const fileId = await savePDFToMongo(
+            `cv_export_${payload.uuid}.pdf`,
+            pdfBuffer,
+            userId,
+            uuid
+          );
+
+          console.log(`📦 PDF saved in MongoDB with ID: ${fileId}`);
+          channel.ack(msg);
+        } catch (err) {
+          console.error("❌ Error processing message:", err);
+        }
       }
     });
 

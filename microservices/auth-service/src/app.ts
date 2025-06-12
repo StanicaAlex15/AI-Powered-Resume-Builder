@@ -1,6 +1,7 @@
 import express from "express";
-import cvRoutes from "./controllers/cv.controller";
 import cors from "cors";
+import authRoutes from "./routes/auth.route";
+import { startAuthConsumer } from "./services/rabbitmq";
 
 const app = express();
 const corsOptions = {
@@ -12,9 +13,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use("/cv-review", cvRoutes);
 
-const PORT = 8085;
+app.use("/auth", authRoutes);
+
+const PORT = 8082;
+
 app.listen(PORT, () => {
-  console.log(`CV Review Service running on port ${PORT}`);
+  console.log(`✅ Auth Service listening on port ${PORT}`);
+  startAuthConsumer();
 });

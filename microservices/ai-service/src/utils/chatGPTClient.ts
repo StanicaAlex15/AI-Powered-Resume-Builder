@@ -5,9 +5,9 @@ import axiosRetry from "axios-retry";
 
 dotenv.config();
 
-const API_KEY = process.env.AIML_API_KEY!;
+const API_KEY = process.env.OPENAI_API_KEY!;
 const API_URL =
-  process.env.AIML_API_URL ?? "https://api.aimlapi.com/v1/chat/completions";
+  process.env.API_URL ?? "https://api.openai.com/v1/chat/completions";
 
 let apiClient: ReturnType<typeof axios.create>;
 
@@ -31,9 +31,10 @@ export const getApiClient = () => {
   return apiClient;
 };
 
-export const callAIMLAPI = async (prompt: string): Promise<string> => {
+export const callChatGPT = async (prompt: string): Promise<string> => {
   try {
     const client = getApiClient();
+    console.log("Making API call to", API_URL);
     const response = await client.post(API_URL, {
       model: "gpt-4o",
       messages: [
@@ -42,14 +43,26 @@ export const callAIMLAPI = async (prompt: string): Promise<string> => {
       ],
     });
 
+    console.log("API response received:", response.data);
+
     const rawResponse = response.data.choices[0].message.content;
+    console.log("Raw response:", rawResponse);
+
     const cleaned = rawResponse.replace(/```markdown|```/g, "").trim();
+    console.log("Cleaned response:", cleaned);
     return cleaned;
   } catch (error: any) {
-    console.error(
-      "AIML API call failed:",
-      error.response?.data ?? error.message
+    console.error("OpenAI API call failed:", {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data,
+      statusCode: error.response?.status,
+    });
+
+    throw new Error(
+      `OpenAI API call failed with status: ${
+        error.response?.status || "Unknown"
+      }`
     );
-    throw new Error("AIML API call failed");
   }
 };

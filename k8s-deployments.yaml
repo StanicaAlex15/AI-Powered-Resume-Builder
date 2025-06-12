@@ -1,0 +1,222 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  ports:
+    - name: amqp
+      port: 5672
+      targetPort: 5672
+    - name: management
+      port: 15672
+      targetPort: 15672
+  selector:
+    app: rabbitmq
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: ai-powered-resume-builder-user-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 8081
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: ai-powered-resume-builder-auth-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth-service
+  ports:
+    - port: 8082
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-service
+  template:
+    metadata:
+      labels:
+        app: ai-service
+    spec:
+      containers:
+        - name: ai-service
+          image: ai-powered-resume-builder-ai-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-service
+spec:
+  selector:
+    app: ai-service
+  ports:
+    - port: 8083
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: export-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: export-service
+  template:
+    metadata:
+      labels:
+        app: export-service
+    spec:
+      containers:
+        - name: export-service
+          image: ai-powered-resume-builder-export-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8084
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: export-service
+spec:
+  selector:
+    app: export-service
+  ports:
+    - port: 8084
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cv-review-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cv-review-service
+  template:
+    metadata:
+      labels:
+        app: cv-review-service
+    spec:
+      containers:
+        - name: cv-review-service
+          image: ai-powered-resume-builder-cv-review-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8085
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cv-review-service
+spec:
+  selector:
+    app: cv-review-service
+  ports:
+    - port: 8085
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: ai-powered-resume-builder-api-gateway
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  type: LoadBalancer
+  selector:
+    app: api-gateway
+  ports:
+    - port: 80

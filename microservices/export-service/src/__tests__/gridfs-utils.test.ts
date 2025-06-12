@@ -130,7 +130,12 @@ describe("fileStorage utils", () => {
       const initializeGridFSSpy = jest.spyOn(fileStorage, "initializeGridFS");
 
       await expect(
-        fileStorage.savePDFToMongo("test.pdf", Buffer.from("test"))
+        fileStorage.savePDFToMongo(
+          "test.pdf",
+          Buffer.from("test"),
+          "mockUserId",
+          "uuid"
+        )
       ).rejects.toThrow("GridFS bucket not initialized");
 
       expect(initializeGridFSSpy).not.toHaveBeenCalled();
@@ -140,7 +145,9 @@ describe("fileStorage utils", () => {
       const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
       const result = await fileStorage.savePDFToMongo(
         "test.pdf",
-        Buffer.from("test")
+        Buffer.from("test"),
+        "mockUserId",
+        "uuid"
       );
       expect(result).toBe("123");
       expect(mockBucket.openUploadStream).toHaveBeenCalledWith("test.pdf");
@@ -152,7 +159,12 @@ describe("fileStorage utils", () => {
 
     it("aruncă eroare dacă nu e inițializat", async () => {
       await expect(
-        fileStorage.savePDFToMongo("test.pdf", Buffer.from("test"))
+        fileStorage.savePDFToMongo(
+          "test.pdf",
+          Buffer.from("test"),
+          "mockUserId",
+          "uuid"
+        )
       ).rejects.toThrow("GridFS bucket not initialized");
     });
 
@@ -164,7 +176,12 @@ describe("fileStorage utils", () => {
         return mockUploadStream;
       });
       await expect(
-        fileStorage.savePDFToMongo("fail.pdf", Buffer.from("fail"))
+        fileStorage.savePDFToMongo(
+          "fail.pdf",
+          Buffer.from("fail"),
+          "mockUserId",
+          "uuid"
+        )
       ).rejects.toThrow("Error saving PDF to MongoDB: upload failed");
     });
   });
@@ -172,7 +189,7 @@ describe("fileStorage utils", () => {
   describe("getPDFStreamFromMongo", () => {
     it("returnează stream pentru ID valid", async () => {
       await fileStorage.initializeGridFS();
-      const stream = await fileStorage.getPDFStreamFromMongo(
+      const stream = await fileStorage.getPDFStreamFromMongoByUuid(
         "507f1f77bcf86cd799439011"
       );
       expect(stream).toBeInstanceOf(Readable);
@@ -185,7 +202,7 @@ describe("fileStorage utils", () => {
         .spyOn(console, "error")
         .mockImplementation(() => {});
       await expect(
-        fileStorage.getPDFStreamFromMongo("invalid")
+        fileStorage.getPDFStreamFromMongoByUuid("invalid")
       ).rejects.toThrow(
         "input must be a 24 character hex string, 12 byte Uint8Array, or an integer"
       );
@@ -198,7 +215,7 @@ describe("fileStorage utils", () => {
 
     it("aruncă eroare dacă nu e inițializat", async () => {
       await expect(
-        fileStorage.getPDFStreamFromMongo("507f1f77bcf86cd799439011")
+        fileStorage.getPDFStreamFromMongoByUuid("507f1f77bcf86cd799439011")
       ).rejects.toThrow("GridFS bucket not initialized.");
     });
   });
