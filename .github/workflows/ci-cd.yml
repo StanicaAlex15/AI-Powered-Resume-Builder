@@ -19,7 +19,6 @@ jobs:
         working-directory: ./microservices/user-service
         run: |
           npm ci
-          npm install --save-dev jest
 
       - name: Run tests for User Service
         working-directory: ./microservices/user-service
@@ -32,7 +31,6 @@ jobs:
         working-directory: ./microservices/ai-service
         run: |
           npm ci
-          npm install --save-dev jest
 
       - name: Run tests for AI Service
         working-directory: ./microservices/ai-service
@@ -45,7 +43,6 @@ jobs:
         working-directory: ./microservices/export-service
         run: |
           npm ci
-          npm install --save-dev jest
 
       - name: Run tests for Export Service
         working-directory: ./microservices/export-service
@@ -58,7 +55,6 @@ jobs:
         working-directory: ./microservices/cv-review-service
         run: |
           npm ci
-          npm install --save-dev jest
 
       - name: Run tests for CV Review Service
         working-directory: ./microservices/cv-review-service
