@@ -51,7 +51,6 @@ spec:
       containers:
         - name: user-service
           image: ai-powered-resume-builder-user-service
-          imagePullPolicy: Never
           ports:
             - containerPort: 8081
 ---
@@ -85,7 +84,6 @@ spec:
       containers:
         - name: auth-service
           image: ai-powered-resume-builder-auth-service
-          imagePullPolicy: Never
           ports:
             - containerPort: 8082
 ---
@@ -119,7 +117,6 @@ spec:
       containers:
         - name: ai-service
           image: ai-powered-resume-builder-ai-service
-          imagePullPolicy: Never
           ports:
             - containerPort: 8083
 ---
@@ -153,7 +150,6 @@ spec:
       containers:
         - name: export-service
           image: ai-powered-resume-builder-export-service
-          imagePullPolicy: Never
           ports:
             - containerPort: 8084
 ---
@@ -187,7 +183,6 @@ spec:
       containers:
         - name: cv-review-service
           image: ai-powered-resume-builder-cv-review-service
-          imagePullPolicy: Never
           ports:
             - containerPort: 8085
 ---
@@ -221,7 +216,6 @@ spec:
       containers:
         - name: api-gateway
           image: ai-powered-resume-builder-api-gateway
-          imagePullPolicy: Never
           ports:
             - containerPort: 80
 ---

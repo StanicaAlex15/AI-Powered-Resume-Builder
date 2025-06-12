@@ -171,6 +171,24 @@ jobs:
         with:
           version: "latest"
 
+      - name: Install cert-manager
+        run: |
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+
+      - name: Wait for cert-manager to be ready
+        run: |
+          echo "Waiting for cert-manager pods to be ready..."
+          kubectl wait --namespace cert-manager --for=condition=Ready pods --all --timeout=180s
+
+      - name: Install ingress-nginx
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+
+      - name: Wait for ingress-nginx controller to be ready
+        run: |
+          echo "Waiting for ingress-nginx controller to be ready..."
+          kubectl wait --namespace ingress-nginx --for=condition=Ready pods --all --timeout=180s
+
       - name: Apply k8s manifests
         run: kubectl apply -f k8s-azure.yaml
 
