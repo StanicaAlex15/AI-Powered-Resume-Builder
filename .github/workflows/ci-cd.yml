@@ -22,7 +22,6 @@ jobs:
 
       - name: Run tests for User Service
         working-directory: ./microservices/user-service
-        # run: npm test
 
       - name: Build User Service
         run: docker compose build user-service
@@ -34,7 +33,6 @@ jobs:
 
       - name: Run tests for AI Service
         working-directory: ./microservices/ai-service
-        # run: npm test
 
       - name: Build AI Service
         run: docker compose build ai-service
@@ -46,7 +44,6 @@ jobs:
 
       - name: Run tests for Export Service
         working-directory: ./microservices/export-service
-        # run: npm test
 
       - name: Build Export Service
         run: docker compose build export-service
@@ -58,7 +55,6 @@ jobs:
 
       - name: Run tests for CV Review Service
         working-directory: ./microservices/cv-review-service
-        # run: npm test
 
       - name: Build CV Review Service
         run: docker compose build cv-review-service
