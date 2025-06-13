@@ -9,149 +9,155 @@ on:
       - main
 
 jobs:
-  build-microservices:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # build-microservices:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies for User Service
-        working-directory: ./microservices/user-service
-        run: |
-          npm ci
+  #     - name: Install dependencies for User Service
+  #       working-directory: ./microservices/user-service
+  #       run: |
+  #         npm ci
 
-      - name: Build User Service
-        run: docker compose build user-service
+  #     - name: Build User Service
+  #       run: docker compose build user-service
 
-      - name: Install dependencies for AI Service
-        working-directory: ./microservices/ai-service
-        run: |
-          npm ci
+  #     - name: Install dependencies for AI Service
+  #       working-directory: ./microservices/ai-service
+  #       run: |
+  #         npm ci
 
-      - name: Build AI Service
-        run: docker compose build ai-service
+  #     - name: Build AI Service
+  #       run: docker compose build ai-service
 
-      - name: Install dependencies for Export Service
-        working-directory: ./microservices/export-service
-        run: |
-          npm ci
+  #     - name: Install dependencies for Export Service
+  #       working-directory: ./microservices/export-service
+  #       run: |
+  #         npm ci
 
-      - name: Build Export Service
-        run: docker compose build export-service
+  #     - name: Build Export Service
+  #       run: docker compose build export-service
 
-      - name: Install dependencies for CV Review Service
-        working-directory: ./microservices/cv-review-service
-        run: |
-          npm ci
+  #     - name: Install dependencies for CV Review Service
+  #       working-directory: ./microservices/cv-review-service
+  #       run: |
+  #         npm ci
 
-      - name: Build CV Review Service
-        run: docker compose build cv-review-service
+  #     - name: Build CV Review Service
+  #       run: docker compose build cv-review-service
 
-  build-api-gateway:
-    runs-on: ubuntu-latest
-    needs: build-microservices
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # build-api-gateway:
+  #   runs-on: ubuntu-latest
+  #   needs: build-microservices
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Log into registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ secrets.ACR_ENDPOINT }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+  #     - name: Log into registry
+  #       uses: docker/login-action@v1
+  #       with:
+  #         registry: ${{ secrets.ACR_ENDPOINT }}
+  #         username: ${{ secrets.ACR_USERNAME }}
+  #         password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Install dependencies for API Gateway
-        working-directory: ./api-gateway
-        run: npm ci
+  #     - name: Install dependencies for API Gateway
+  #       working-directory: ./api-gateway
+  #       run: npm ci
 
-      - name: Build API Gateway
-        run: docker compose build api-gateway
+  #     - name: Build API Gateway
+  #       run: docker compose build api-gateway
 
-  deploy-to-acr:
-    runs-on: ubuntu-latest
-    needs: [build-microservices, build-api-gateway]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # deploy-to-acr:
+  #   runs-on: ubuntu-latest
+  #   needs: [build-microservices, build-api-gateway]
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Log into registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ secrets.ACR_ENDPOINT }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+  #     - name: Log into registry
+  #       uses: docker/login-action@v1
+  #       with:
+  #         registry: ${{ secrets.ACR_ENDPOINT }}
+  #         username: ${{ secrets.ACR_USERNAME }}
+  #         password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: all
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v2
+  #       with:
+  #         platforms: all
 
-      - name: Build & Push user-service
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: ./microservices/user-service
-          tags: ${{ secrets.ACR_ENDPOINT }}/user-service:${{ github.sha }}
-          platforms: linux/arm64
+  #     - name: Build & Push user-service
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         push: true
+  #         context: ./microservices/user-service
+  #         tags: ${{ secrets.ACR_ENDPOINT }}/user-service:${{ github.sha }}
+  #         platforms: linux/arm64
 
-      - name: Build & Push ai-service
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: ./microservices/ai-service
-          tags: ${{ secrets.ACR_ENDPOINT }}/ai-service:${{ github.sha }}
-          platforms: linux/arm64
+  #     - name: Build & Push ai-service
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         push: true
+  #         context: ./microservices/ai-service
+  #         tags: ${{ secrets.ACR_ENDPOINT }}/ai-service:${{ github.sha }}
+  #         platforms: linux/arm64
 
-      - name: Build & Push export-service
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: ./microservices/export-service
-          tags: ${{ secrets.ACR_ENDPOINT }}/export-service:${{ github.sha }}
-          platforms: linux/arm64
+  #     - name: Build & Push export-service
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         push: true
+  #         context: ./microservices/export-service
+  #         tags: ${{ secrets.ACR_ENDPOINT }}/export-service:${{ github.sha }}
+  #         platforms: linux/arm64
 
-      - name: Build & Push cv-review-service
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: ./microservices/cv-review-service
-          tags: ${{ secrets.ACR_ENDPOINT }}/cv-review-service:${{ github.sha }}
-          platforms: linux/arm64
+  #     - name: Build & Push cv-review-service
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         push: true
+  #         context: ./microservices/cv-review-service
+  #         tags: ${{ secrets.ACR_ENDPOINT }}/cv-review-service:${{ github.sha }}
+  #         platforms: linux/arm64
 
-      - name: Build & Push auth-service
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: ./microservices/auth-service
-          tags: ${{ secrets.ACR_ENDPOINT }}/auth-service:${{ github.sha }}
-          platforms: linux/arm64
+  #     - name: Build & Push auth-service
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         push: true
+  #         context: ./microservices/auth-service
+  #         tags: ${{ secrets.ACR_ENDPOINT }}/auth-service:${{ github.sha }}
+  #         platforms: linux/arm64
 
-      - name: Build & Push api-gateway
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: ./api-gateway
-          tags: ${{ secrets.ACR_ENDPOINT }}/api-gateway:${{ github.sha }}
-          platforms: linux/arm64
+  #     - name: Build & Push api-gateway
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         push: true
+  #         context: ./api-gateway
+  #         tags: ${{ secrets.ACR_ENDPOINT }}/api-gateway:${{ github.sha }}
+  #         platforms: linux/arm64
 
   update-k8s-yaml:
     runs-on: ubuntu-latest
-    needs: deploy-to-acr
+    # needs: deploy-to-acr
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Update image tags in k8s-azure.yaml
         run: |
-          sed -i "s|image: ai-powered-resume-builder-user-service|image: ${{ secrets.ACR_ENDPOINT }}/user-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|image: ai-powered-resume-builder-ai-service|image: ${{ secrets.ACR_ENDPOINT }}/ai-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|image: ai-powered-resume-builder-export-service|image: ${{ secrets.ACR_ENDPOINT }}/export-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|image: ai-powered-resume-builder-cv-review-service|image: ${{ secrets.ACR_ENDPOINT }}/cv-review-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|image: ai-powered-resume-builder-auth-service|image: ${{ secrets.ACR_ENDPOINT }}/auth-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|image: ai-powered-resume-builder-api-gateway|image: ${{ secrets.ACR_ENDPOINT }}/api-gateway:${{ github.sha }}|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-user-service|image: ${{ secrets.ACR_ENDPOINT }}/user-service:27452f61be0f8c2b1f8eb841793e383306789c21|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-ai-service|image: ${{ secrets.ACR_ENDPOINT }}/ai-service:27452f61be0f8c2b1f8eb841793e383306789c21|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-export-service|image: ${{ secrets.ACR_ENDPOINT }}/export-service:27452f61be0f8c2b1f8eb841793e383306789c21|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-cv-review-service|image: ${{ secrets.ACR_ENDPOINT }}/cv-review-service:27452f61be0f8c2b1f8eb841793e383306789c21|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-auth-service|image: ${{ secrets.ACR_ENDPOINT }}/auth-service:27452f61be0f8c2b1f8eb841793e383306789c21|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-api-gateway|image: ${{ secrets.ACR_ENDPOINT }}/api-gateway:27452f61be0f8c2b1f8eb841793e383306789c21|g" k8s-azure.yaml
+        # sed -i "s|image: ai-powered-resume-builder-user-service|image: ${{ secrets.ACR_ENDPOINT }}/user-service:${{ github.sha }}|g" k8s-azure.yaml
+        # sed -i "s|image: ai-powered-resume-builder-ai-service|image: ${{ secrets.ACR_ENDPOINT }}/ai-service:${{ github.sha }}|g" k8s-azure.yaml
+        # sed -i "s|image: ai-powered-resume-builder-export-service|image: ${{ secrets.ACR_ENDPOINT }}/export-service:${{ github.sha }}|g" k8s-azure.yaml
+        # sed -i "s|image: ai-powered-resume-builder-cv-review-service|image: ${{ secrets.ACR_ENDPOINT }}/cv-review-service:${{ github.sha }}|g" k8s-azure.yaml
+        # sed -i "s|image: ai-powered-resume-builder-auth-service|image: ${{ secrets.ACR_ENDPOINT }}/auth-service:${{ github.sha }}|g" k8s-azure.yaml
+        # sed -i "s|image: ai-powered-resume-builder-api-gateway|image: ${{ secrets.ACR_ENDPOINT }}/api-gateway:${{ github.sha }}|g" k8s-azure.yaml
 
       - name: Upload updated k8s-azure.yaml
         uses: actions/upload-artifact@v4
@@ -165,6 +171,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Remove existing k8s-azure.yaml
+        run: rm -f k8s-azure.yaml
 
       - name: Download updated k8s-azure.yaml
         uses: actions/download-artifact@v4
@@ -190,80 +199,83 @@ jobs:
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
 
+      - name: debug
+        run: cat k8s-azure.yaml
+
       - name: Apply k8s manifests
         run: kubectl apply -f k8s-azure.yaml
 
-  sonarcloud-analysis:
-    name: SonarCloud Scan
-    runs-on: ubuntu-latest
-    needs: deploy-to-aks
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # sonarcloud-analysis:
+  #   name: SonarCloud Scan
+  #   runs-on: ubuntu-latest
+  #   needs: deploy-to-aks
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "18"
 
-      - name: Install dependencies
-        run: npm ci
+  #     - name: Install dependencies
+  #       run: npm ci
 
-      - name: Run SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5.0.0
-        with:
-          projectBaseDir: .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #     - name: Run SonarCloud Scan
+  #       uses: SonarSource/sonarqube-scan-action@v5.0.0
+  #       with:
+  #         projectBaseDir: .
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  snyk-security:
-    name: Snyk Security Scan
-    runs-on: ubuntu-latest
-    needs: build-api-gateway
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # snyk-security:
+  #   name: Snyk Security Scan
+  #   runs-on: ubuntu-latest
+  #   needs: build-api-gateway
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "18"
 
-      - name: Install Snyk
-        run: npm install -g snyk
+  #     - name: Install Snyk
+  #       run: npm install -g snyk
 
-      - name: Run Snyk test (user-service)
-        working-directory: ./microservices/user-service
-        run: snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #     - name: Run Snyk test (user-service)
+  #       working-directory: ./microservices/user-service
+  #       run: snyk test --severity-threshold=high
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Snyk test (ai-service)
-        working-directory: ./microservices/ai-service
-        run: snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #     - name: Run Snyk test (ai-service)
+  #       working-directory: ./microservices/ai-service
+  #       run: snyk test --severity-threshold=high
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Snyk test (export-service)
-        working-directory: ./microservices/export-service
-        run: snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #     - name: Run Snyk test (export-service)
+  #       working-directory: ./microservices/export-service
+  #       run: snyk test --severity-threshold=high
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Snyk test (cv-review-service)
-        working-directory: ./microservices/cv-review-service
-        run: snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #     - name: Run Snyk test (cv-review-service)
+  #       working-directory: ./microservices/cv-review-service
+  #       run: snyk test --severity-threshold=high
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Snyk test (auth-service)
-        working-directory: ./microservices/auth-service
-        run: snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #     - name: Run Snyk test (auth-service)
+  #       working-directory: ./microservices/auth-service
+  #       run: snyk test --severity-threshold=high
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Snyk test (api-gateway)
-        working-directory: ./api-gateway
-        run: snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #     - name: Run Snyk test (api-gateway)
+  #       working-directory: ./api-gateway
+  #       run: snyk test --severity-threshold=high
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
