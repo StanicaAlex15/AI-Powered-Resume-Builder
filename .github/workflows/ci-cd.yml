@@ -146,12 +146,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Update image tags in k8s-azure.yaml
         run: |
-          sed -i "s|\(image: \).*user-service:.*|image: ${{ secrets.ACR_ENDPOINT }}/user-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|\(image: \).*ai-service:.*|image: ${{ secrets.ACR_ENDPOINT }}/ai-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|\(image: \).*export-service:.*|image: ${{ secrets.ACR_ENDPOINT }}/export-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|\(image: \).*cv-review-service:.*|image: ${{ secrets.ACR_ENDPOINT }}/cv-review-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|\(image: \).*auth-service:.*|image: ${{ secrets.ACR_ENDPOINT }}/auth-service:${{ github.sha }}|g" k8s-azure.yaml
-          sed -i "s|\(image: \).*api-gateway:.*|image: ${{ secrets.ACR_ENDPOINT }}/api-gateway:${{ github.sha }}|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-user-service|image: ${{ secrets.ACR_ENDPOINT }}/user-service:${{ github.sha }}|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-ai-service|image: ${{ secrets.ACR_ENDPOINT }}/ai-service:${{ github.sha }}|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-export-service|image: ${{ secrets.ACR_ENDPOINT }}/export-service:${{ github.sha }}|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-cv-review-service|image: ${{ secrets.ACR_ENDPOINT }}/cv-review-service:${{ github.sha }}|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-auth-service|image: ${{ secrets.ACR_ENDPOINT }}/auth-service:${{ github.sha }}|g" k8s-azure.yaml
+          sed -i "s|image: ai-powered-resume-builder-api-gateway|image: ${{ secrets.ACR_ENDPOINT }}/api-gateway:${{ github.sha }}|g" k8s-azure.yaml
 
       - name: Upload updated k8s-azure.yaml
         uses: actions/upload-artifact@v4
@@ -166,25 +166,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: debug
-        run: ls -a
-
-      - name: Remove existing k8s-azure.yaml
-        run: rm -f k8s-azure.yaml
-
-      - name: debug
-        run: ls -a
-
       - name: Download updated k8s-azure.yaml
         uses: actions/download-artifact@v4
         with:
           name: k8s-yaml
-
-      - name: debug
-        run: ls -a
-
-      - name: debug
-        run: cat k8s-azure.yaml
 
       - name: Set kubeconfig from secret
         run: |
