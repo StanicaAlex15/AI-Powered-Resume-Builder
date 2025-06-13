@@ -231,7 +231,6 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: ClusterIP
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -271,5 +270,3 @@ spec:
                 name: nginx-gateway
                 port:
                   number: 80
-
-
