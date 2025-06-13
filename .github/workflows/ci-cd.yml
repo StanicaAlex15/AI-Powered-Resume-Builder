@@ -166,10 +166,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: debug
+        run: ls -a
+
+      - name: Remove existing k8s-azure.yaml
+        run: rm -f k8s-azure.yaml
+
+      - name: debug
+        run: ls -a
+
       - name: Download updated k8s-azure.yaml
         uses: actions/download-artifact@v4
         with:
           name: k8s-yaml
+
+      - name: debug
+        run: ls -a
+
+      - name: debug
+        run: cat k8s-azure.yaml
 
       - name: Set kubeconfig from secret
         run: |
@@ -189,9 +204,6 @@ jobs:
       - name: Install ingress-nginx
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
-
-      - name: Move updated k8s-azure.yaml to workspace root
-        run: mv k8s-yaml/k8s-azure.yaml .
 
       - name: Apply k8s manifests
         run: kubectl apply -f k8s-azure.yaml
