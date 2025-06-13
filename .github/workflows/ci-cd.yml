@@ -190,8 +190,11 @@ jobs:
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
 
+      - name: Move updated k8s-azure.yaml to workspace root
+        run: mv k8s-yaml/k8s-azure.yaml .
+
       - name: Apply k8s manifests
-        run: kubectl apply -f ./k8s-yaml/k8s-azure.yaml
+        run: kubectl apply -f k8s-azure.yaml
 
   sonarcloud-analysis:
     name: SonarCloud Scan
