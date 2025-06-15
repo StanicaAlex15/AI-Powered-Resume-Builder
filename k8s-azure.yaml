@@ -1,3 +1,4 @@
+# rabbitmq unchanged
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,6 +54,12 @@ spec:
           image: ai-powered-resume-builder-user-service
           ports:
             - containerPort: 8081
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-secret
+                  key: MONGODB_URI
 ---
 apiVersion: v1
 kind: Service
@@ -86,6 +93,32 @@ spec:
           image: ai-powered-resume-builder-auth-service
           ports:
             - containerPort: 8082
+          env:
+            - name: AUTH0_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: AUTH0_DOMAIN
+            - name: AUTH0_AUDIENCE
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: AUTH0_AUDIENCE
+            - name: AUTH0_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: AUTH0_CLIENT_ID
+            - name: AUTH0_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: AUTH0_CLIENT_SECRET
+            - name: RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: RABBITMQ_URL
 ---
 apiVersion: v1
 kind: Service
@@ -119,6 +152,22 @@ spec:
           image: ai-powered-resume-builder-ai-service
           ports:
             - containerPort: 8083
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ai-service-secret
+                  key: OPENAI_API_KEY
+            - name: API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ai-service-secret
+                  key: API_URL
+            - name: RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ai-service-secret
+                  key: RABBITMQ_URL
 ---
 apiVersion: v1
 kind: Service
@@ -152,6 +201,12 @@ spec:
           image: ai-powered-resume-builder-export-service
           ports:
             - containerPort: 8084
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: export-service-secret
+                  key: MONGODB_URI
 ---
 apiVersion: v1
 kind: Service
