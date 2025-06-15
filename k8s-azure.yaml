@@ -267,6 +267,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: nginx-gateway
+                name: api-gateway
                 port:
                   number: 80
