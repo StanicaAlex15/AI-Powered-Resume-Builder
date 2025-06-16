@@ -251,7 +251,7 @@ jobs:
             echo "▶️ Testing $service"
             cd microservices/$service
             npm ci
-            npx jest --coverage --coverageDirectory=../../coverage/$service
+            npx jest --coverage --coverageReporters=lcov --coverageDirectory=../../coverage/$service
             cd ../../
           done
 

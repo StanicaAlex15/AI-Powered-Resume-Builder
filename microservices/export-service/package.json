@@ -30,35 +30,27 @@
         "ts-jest": "^29.3.2",
         "typescript": "^5.8.2"
     },
-    "jest": {
-        "preset": "ts-jest",
-        "testEnvironment": "node",
-        "roots": [
-            "<rootDir>"
-        ],
-        "testRegex": "(test|spec)\\.ts$",
-        "transform": {
-            "^.+\\.(ts|tsx)$": "ts-jest"
-        },
-        "moduleFileExtensions": [
-            "ts",
-            "js"
-        ],
-        "moduleDirectories": [
-            "node_modules"
-        ],
-        "testEnvironmentOptions": {
-            "legacyFakeTimers": true
-        },
-        "coverageReporters": [
-            "json-summary",
-            "text",
-            "lcov"
-        ],
-        "coverageDirectory": "./coverage/",
-        "coveragePathIgnorePatterns": [
-            "/node_modules/",
-            "/__tests__/"
-        ]
-    }
+   "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/src"],
+    "testMatch": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "moduleFileExtensions": ["ts", "js", "json", "node"],
+    "moduleDirectories": ["node_modules"],
+    "testEnvironmentOptions": {
+      "legacyFakeTimers": true
+    },
+    "coverageReporters": ["json-summary", "text", "lcov"],
+    "coverageDirectory": "./coverage",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/",
+      "\\.test\\.ts$",
+      "\\.spec\\.ts$",
+      "db\\.ts"
+    ]
+  }
 }
