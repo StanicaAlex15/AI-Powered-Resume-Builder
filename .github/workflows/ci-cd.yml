@@ -235,6 +235,10 @@ jobs:
       - name: Apply ServiceMonitors
         run: kubectl apply -f servicemonitors.yaml
 
+      - name: Verify Services and ServiceMonitors
+        run: |
+          kubectl get service -n default
+          kubectl get servicemonitor -n monitoring
   test:
     name: Run Unit Tests and Coverage
     runs-on: ubuntu-latest
