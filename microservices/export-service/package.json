@@ -5,7 +5,7 @@
     "scripts": {
         "start": "tsc && nodemon --exec \"node --max-old-space-size=2048\" build/app.js",
         "build": "tsc",
-        "test": "jest --coverage --coverageDirectory=coverage"
+        "test": "jest --coverage"
     },
     "dependencies": {
         "amqplib": "^0.10.5",
