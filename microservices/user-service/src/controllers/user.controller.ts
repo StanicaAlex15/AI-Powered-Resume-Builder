@@ -8,8 +8,12 @@ export const getUsersController = async (_req: Request, res: Response) => {
     const users = await getUsers();
     res.json(users);
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "An unknown error occurred";
+    let errorMessage: string;
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = "An unknown error occurred";
+    }
     res.status(500).json({ error: errorMessage });
   }
 };
@@ -19,8 +23,12 @@ export const createUserController = async (req: Request, res: Response) => {
     const user = await createUser(req.body);
     res.json(user);
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "An unknown error occurred";
+    let errorMessage: string;
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = "An unknown error occurred";
+    }
     res.status(500).json({ error: errorMessage });
   }
 };
@@ -30,8 +38,12 @@ export const deleteUserController = async (req: Request, res: Response) => {
     const response = await deleteUser(req.params.id);
     res.json(response);
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "User not found";
+    let errorMessage: string;
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = "User not found";
+    }
     res.status(404).json({ error: errorMessage });
   }
 };

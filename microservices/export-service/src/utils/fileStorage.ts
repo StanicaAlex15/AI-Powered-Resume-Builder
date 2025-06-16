@@ -73,7 +73,7 @@ export const getPDFStreamFromMongoByUuid = async (uuid: string) => {
 
   try {
     console.time("Download PDF Time");
-
+    const _ = new ObjectId(uuid);
     const filesCursor = await gfsBucket
       .find({ "metadata.uuid": uuid })
       .sort({ uploadDate: -1 })

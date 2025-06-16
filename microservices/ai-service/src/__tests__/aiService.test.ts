@@ -1,7 +1,7 @@
 import { analyzeCV } from "../services/aiService";
 import { callChatGPT } from "../utils/chatGPTClient";
 
-jest.mock("../utils/aimlapiClient");
+jest.mock("../utils/chatGPTClient");
 
 describe("AI Service", () => {
   afterEach(() => {

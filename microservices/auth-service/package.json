@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && nodemon --exec \"node --max-old-space-size=2048\" build/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -30,5 +30,18 @@
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": ["<rootDir>"],
+    "testRegex": "(test|spec)\\.ts$",
+    "transform": {"^.+\\.(ts|tsx)$": "ts-jest"},
+    "moduleFileExtensions": ["ts", "js"],
+    "moduleDirectories": ["node_modules"],
+    "testEnvironmentOptions": {"legacyFakeTimers": true},
+    "coverageReporters": ["json-summary", "text", "lcov"],
+    "coverageDirectory": "./coverage/",
+    "coveragePathIgnorePatterns": ["/node_modules/", "/__tests__/"]
   }
 }
