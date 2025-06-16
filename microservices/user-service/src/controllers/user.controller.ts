@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { getUsers, createUser, deleteUser } from "../services/user.service";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+export const getUsersController = async (_req: Request, res: Response) => {
   try {
     const users = await getUsers();
     res.json(users);
@@ -12,9 +12,9 @@ router.get("/", async (req, res) => {
       error instanceof Error ? error.message : "An unknown error occurred";
     res.status(500).json({ error: errorMessage });
   }
-});
+};
 
-router.post("/", async (req, res) => {
+export const createUserController = async (req: Request, res: Response) => {
   try {
     const user = await createUser(req.body);
     res.json(user);
@@ -23,9 +23,9 @@ router.post("/", async (req, res) => {
       error instanceof Error ? error.message : "An unknown error occurred";
     res.status(500).json({ error: errorMessage });
   }
-});
+};
 
-router.delete("/:id", async (req, res) => {
+export const deleteUserController = async (req: Request, res: Response) => {
   try {
     const response = await deleteUser(req.params.id);
     res.json(response);
@@ -34,6 +34,10 @@ router.delete("/:id", async (req, res) => {
       error instanceof Error ? error.message : "User not found";
     res.status(404).json({ error: errorMessage });
   }
-});
+};
+
+router.get("/", getUsersController);
+router.post("/", createUserController);
+router.delete("/:id", deleteUserController);
 
 export default router;

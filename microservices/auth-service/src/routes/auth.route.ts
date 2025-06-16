@@ -1,19 +1,8 @@
-import { Request, Response, NextFunction, Router } from "express";
+import { Router } from "express";
 import { verifyToken } from "../middleware/verifyToken";
-
+import { verifyTokenController } from "../controllers/auth.controller";
 const router = Router();
 
-router.post(
-  "/verify",
-  verifyToken,
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      res.status(200).json({ message: "Token valid", user: req.user });
-    } catch (error) {
-      console.error(error);
-      res.status(400).json({ message: "Invalid token" });
-    }
-  }
-);
+router.post("/verify", verifyToken, verifyTokenController);
 
 export default router;
