@@ -1,28 +1,4 @@
 apiVersion: monitoring.coreos.com/v1
-kind: Prometheus
-metadata:
-  name: kube-prometheus
-  namespace: monitoring
-  labels:
-    release: monitoring
-spec:
-  replicas: 1
-  serviceAccountName: prometheus-k8s
-  serviceMonitorSelector:
-    matchLabels:
-      release: monitoring
-  serviceMonitorNamespaceSelector:
-    matchNames:
-      - monitoring
-  resources:
-    requests:
-      memory: 400Mi
-  enableAdminAPI: true
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 65534
----
-apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: user-service-monitor

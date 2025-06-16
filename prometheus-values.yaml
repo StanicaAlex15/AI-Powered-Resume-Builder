@@ -4,5 +4,4 @@ prometheus:
       matchLabels:
         release: monitoring
     serviceMonitorNamespaceSelector:
-      matchNames:
-        - monitoring
+      any: true
