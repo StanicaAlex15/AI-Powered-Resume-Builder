@@ -73,7 +73,8 @@ spec:
   selector:
     app: user-service
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8081
       targetPort: 8081
   type: ClusterIP
@@ -136,7 +137,8 @@ spec:
   selector:
     app: auth-service
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8082
       targetPort: 8082
   type: ClusterIP
@@ -189,7 +191,8 @@ spec:
   selector:
     app: ai-service
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8083
       targetPort: 8083
   type: ClusterIP
@@ -232,7 +235,8 @@ spec:
   selector:
     app: export-service
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8084
       targetPort: 8084
   type: ClusterIP
@@ -269,7 +273,8 @@ spec:
   selector:
     app: cv-review-service
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8085
       targetPort: 8085
   type: ClusterIP
@@ -345,3 +350,98 @@ spec:
                 name: api-gateway
                 port:
                   number: 80
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: user-service-monitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: user-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: auth-service-monitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: auth-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ai-service-monitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: ai-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: export-service-monitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: export-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cv-review-service-monitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: cv-review-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
