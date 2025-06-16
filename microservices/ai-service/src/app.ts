@@ -5,7 +5,10 @@ import cors from "cors";
 import { verifyTokenMiddleware } from "./middleware/verifyToken.middleware";
 const app = express();
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: [
+    "http://localhost:3000",
+    "https://happy-island-08f195603.6.azurestaticapps.net",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200,
