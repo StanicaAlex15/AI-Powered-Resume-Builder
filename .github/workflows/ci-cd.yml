@@ -245,35 +245,21 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install root dependencies
+      - name: Install root dependencies (if needed)
         run: npm ci
 
-      - name: Run tests with coverage (user-service)
-        working-directory: ./microservices/user-service
-        run: npm test -- --coverage
-
-      - name: Run tests with coverage (ai-service)
-        working-directory: ./microservices/ai-service
-        run: npm test -- --coverage
-
-      - name: Run tests with coverage (export-service)
-        working-directory: ./microservices/export-service
-        run: npm test -- --coverage
-
-      - name: Run tests with coverage (cv-review-service)
-        working-directory: ./microservices/cv-review-service
-        run: npm test -- --coverage
-
-      - name: Run tests with coverage (auth-service)
-        working-directory: ./microservices/auth-service
-        run: npm test -- --coverage
-
-      - name: Run tests with coverage (api-gateway)
-        working-directory: ./api-gateway
-        run: npm test -- --coverage
+      - name: Run tests with coverage for each microservice
+        run: |
+          for service in user-service ai-service export-service cv-review-service auth-service; do
+            echo "▶️ Running tests for $service"
+            cd microservices/$service
+            npm ci
+            npm test -- --coverage --coverageDirectory=../../coverage/$service
+            cd ../../
+          done
 
       - name: List coverage files
-        run: ls -l microservices/*/coverage/lcov.info
+        run: find coverage -name 'lcov.info'
 
   sonarcloud-analysis:
     name: SonarCloud Scan
