@@ -232,6 +232,9 @@ jobs:
       - name: Apply k8s manifests
         run: kubectl apply -f k8s-azure.yaml
 
+      - name: Apply ServiceMonitors
+        run: kubectl apply -f servicemonitors.yaml
+
   test:
     name: Run Unit Tests and Coverage
     runs-on: ubuntu-latest
