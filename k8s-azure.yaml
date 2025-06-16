@@ -48,6 +48,10 @@ spec:
     metadata:
       labels:
         app: user-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8081"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: user-service
@@ -87,6 +91,10 @@ spec:
     metadata:
       labels:
         app: auth-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8082"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: auth-service
@@ -146,6 +154,10 @@ spec:
     metadata:
       labels:
         app: ai-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8083"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: ai-service
@@ -195,6 +207,10 @@ spec:
     metadata:
       labels:
         app: export-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8084"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: export-service
@@ -234,6 +250,10 @@ spec:
     metadata:
       labels:
         app: cv-review-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8085"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: cv-review-service

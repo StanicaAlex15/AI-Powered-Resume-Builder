@@ -3,8 +3,17 @@ import userController from "./controllers/user.controller";
 import { connectDB } from "./db/db";
 import { verifyTokenMiddleware } from "./middleware/verifyToken.middleware";
 import cors from "cors";
+import client from "prom-client";
 
 const app = express();
+
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
+app.get("/metrics", async (_req, res) => {
+  res.set("Content-Type", register.contentType);
+  res.end(await register.metrics());
+});
 
 const corsOptions = {
   origin: [
