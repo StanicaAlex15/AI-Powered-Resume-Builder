@@ -251,8 +251,7 @@ jobs:
             echo "▶️ Testing $service"
             cd microservices/$service
             npm ci
-            npm install --save-dev jest
-            npm test -- --coverage --coverageDirectory=../../coverage/$service
+            npx jest --coverage --coverageDirectory=../../coverage/$service
             cd ../../
           done
 
