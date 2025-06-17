@@ -3,3 +3,28 @@ prometheus:
     serviceMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelector: {}
     serviceMonitorNamespaceSelector: {}
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi
+          storageClassName: managed-csi
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "25m"
+      limits:
+        memory: "300Mi"
+        cpu: "50m"
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        memory: "50Mi"
+        cpu: "25m"
+      limits:
+        memory: "200Mi"
+        cpu: "50m"
