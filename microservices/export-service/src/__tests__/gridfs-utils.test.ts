@@ -175,9 +175,8 @@ describe("fileStorage utils", () => {
   describe("getPDFStreamFromMongoByUuid", () => {
     it("returnează stream pentru UUID valid", async () => {
       await fileStorage.initializeGridFS();
-      const stream = await fileStorage.getPDFStreamFromMongoByUuid(
-        "507f1f77bcf86cd799439011"
-      );
+      const uuid = "507f1f77bcf86cd799439011";
+      const stream = await fileStorage.getPDFStreamFromMongoByUuid(uuid);
       expect(stream).toBeInstanceOf(Readable);
       expect(mockBucket.openDownloadStream).toHaveBeenCalled();
     });
