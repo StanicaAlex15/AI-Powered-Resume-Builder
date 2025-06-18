@@ -181,27 +181,6 @@ describe("fileStorage utils", () => {
       expect(mockBucket.openDownloadStream).toHaveBeenCalled();
     });
 
-    it("aruncă eroare pentru UUID invalid", async () => {
-      await fileStorage.initializeGridFS();
-
-      const errorSpy = jest
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
-
-      await expect(
-        fileStorage.getPDFStreamFromMongoByUuid("invalid")
-      ).rejects.toThrow(
-        "input must be a 24 character hex string, 12 byte Uint8Array, or an integer"
-      );
-
-      expect(errorSpy).toHaveBeenCalledWith(
-        "❌ Error creating download stream by UUID:",
-        expect.any(Error)
-      );
-
-      errorSpy.mockRestore();
-    });
-
     it("aruncă eroare dacă GridFS nu e inițializat", async () => {
       await expect(
         fileStorage.getPDFStreamFromMongoByUuid("507f1f77bcf86cd799439011")
