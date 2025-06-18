@@ -7,7 +7,7 @@
         "test": "jest --coverage"
     },
     "dependencies": {
-        "amqplib": "^0.10.7",
+        "amqplib": "^0.10.8",
         "axios": "^1.8.4",
         "axios-retry": "^4.5.0",
         "cors": "^2.8.5",
